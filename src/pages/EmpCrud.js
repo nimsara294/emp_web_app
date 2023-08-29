@@ -11,10 +11,16 @@ import Form from "react-bootstrap/Form";
 import "bootstrap/dist/css/bootstrap.css";
 
 const EmpCrud = () => {
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+
+  const [editFname, setEditfname] = useState("");
+  const [editLname, setEditlname] = useState("");
+  
   const [lgShow, setLgShow] = useState(false);
   const handleClose = () => setLgShow(false);
   const handleShow = () => setLgShow(true);
-
+  
   const empdata = [
     {
       emp_id: 1,
@@ -43,11 +49,31 @@ const EmpCrud = () => {
   ];
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [data, setData] = useState([]);
-
+  
   useEffect(() => {
     setData(empdata);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
+  const options = [
+    { value: "", text: "--Select Department--" },
+    { value: "IT", text: "IT" },
+    { value: "HR", text: "HR" },
+    { value: "Financial", text: "Financial" },
+  ];
+  
+  const [dep, setDep] = useState(options[0].value);
+  const [editDep, setEditdep] = useState(options[0].value);
+  
+  const handleChange = (event) => {
+    // console.log(event.target.value);
+    setDep(event.target.value);
+  };
+
+  const handleEditChange = (event) => {
+    // console.log(event.target.value);
+    setEditdep(event.target.value);
+  };
 
   const handleEdit = (id) => {
     // alert(id);
@@ -71,6 +97,8 @@ const EmpCrud = () => {
               type="text"
               className="form-control"
               placeholder="Enter First Name"
+              value={fname}
+              onChange={(e) => setFname(e.target.value)}
             />
           </Col>
           <Col>
@@ -78,14 +106,21 @@ const EmpCrud = () => {
               type="text"
               className="form-control"
               placeholder="Enter Last Name"
+              value={lname}
+              onChange={(e) => setLname(e.target.value)}
             />
           </Col>
           <Col>
-            <Form.Select aria-label="Default select example">
-              <option>Select Department</option>
-              <option value="1">HR</option>
-              <option value="2">IT</option>
-              <option value="3">Financial</option>
+            <Form.Select
+              aria-label="Default select example"
+              value={dep}
+              onChange={handleChange}
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.text}
+                </option>
+              ))}
             </Form.Select>
           </Col>
           <Col>
@@ -145,30 +180,39 @@ const EmpCrud = () => {
           <Modal.Title>Update Employee Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Row>
-            <Col>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Enter First Name"
-              />
-            </Col>
-            <Col>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Enter Last Name"
-              />
-            </Col>
-            <Col>
-              <Form.Select aria-label="Default select example">
-                <option>Select Department</option>
-                <option value="1">HR</option>
-                <option value="2">IT</option>
-                <option value="3">Financial</option>
-              </Form.Select>
-            </Col>
-          </Row>
+        <Row>
+          <Col>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter First Name"
+              value={editFname}
+              onChange={(e) => setEditfname(e.target.value)}
+            />
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter Last Name"
+              value={editLname}
+              onChange={(e) => setEditlname(e.target.value)}
+            />
+          </Col>
+          <Col>
+            <Form.Select
+              aria-label="Default select example"
+              value={editDep}
+              onChange={handleEditChange}
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.text}
+                </option>
+              ))}
+            </Form.Select>
+          </Col>
+        </Row>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
