@@ -37,6 +37,17 @@ const EmpCrud = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleEdit = (id) => {
+    alert(id);
+  }
+
+  const handleDelete = (id) => {
+    if(window.confirm("Do you want to delete this employee?") === true)
+    {
+      alert(id);
+    }
+  }
+
   return (
     <Fragment>
       <Table striped bordered hover>
@@ -58,8 +69,8 @@ const EmpCrud = () => {
                     <td>{item.lastname}</td>
                     <td>{item.dep}</td>
                     <td colSpan={2}>
-                        <button className="btn btn-primary">Edit</button> &nbsp;
-                        <button className="btn btn-danger">Delete</button>
+                        <button className="btn btn-primary" onClick={() => handleEdit(item.emp_id)}>Edit</button> &nbsp;
+                        <button className="btn btn-danger" onClick={() => handleDelete(item.emp_id)}>Delete</button>
                     </td>
                   </tr>
                 );
