@@ -116,7 +116,17 @@ const EmpCrud = () => {
   
   const handleDelete = (id) => {
     if (window.confirm("Do you want to delete this employee?") === true) {
-      alert(id);
+      axios.delete(`https://localhost:7105/api/Employee/${id}`)
+      .then((result) => {
+        if(result.status === 200)
+        {
+          window.alert("User deleted");
+          getData();
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
     }
   };
   
@@ -226,7 +236,7 @@ const EmpCrud = () => {
                       &nbsp;
                       <button
                         className="btn btn-danger"
-                        onClick={() => handleDelete(item.emp_id)}
+                        onClick={() => handleDelete(item.id)}
                       >
                         Delete
                       </button>
