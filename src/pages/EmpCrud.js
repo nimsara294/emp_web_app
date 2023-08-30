@@ -10,6 +10,8 @@ import Form from "react-bootstrap/Form";
 
 import "bootstrap/dist/css/bootstrap.css";
 
+import axios from "axios";
+
 const EmpCrud = () => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
@@ -51,9 +53,18 @@ const EmpCrud = () => {
   const [data, setData] = useState([]);
   
   useEffect(() => {
-    setData(empdata);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getData();
   }, []);
+
+  const getData = () => {
+    axios.get('https://localhost:7105/api/Employee')
+    .then((result) => {
+      setData(result.data)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
   
   const options = [
     { value: "", text: "--Select Department--" },
@@ -144,9 +155,9 @@ const EmpCrud = () => {
             ? data.map((item, index) => {
                 return (
                   <tr key={index}>
-                    <td>{item.emp_id}</td>
-                    <td>{item.firstname}</td>
-                    <td>{item.lastname}</td>
+                    <td>{item.id}</td>
+                    <td>{item.fname}</td>
+                    <td>{item.lname}</td>
                     <td>{item.dep}</td>
                     <td colSpan={2}>
                       <button

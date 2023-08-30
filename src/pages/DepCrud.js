@@ -9,6 +9,8 @@ import Col from "react-bootstrap/Col";
 
 import "bootstrap/dist/css/bootstrap.css";
 
+import axios from "axios";
+
 const DepCrud = () => {
   const [depname, setDepName] = useState("");
 
@@ -36,9 +38,19 @@ const DepCrud = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    setData(depData);
+    getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const getData = () => {
+    axios.get('https://localhost:7105/api/Department')
+    .then((result) => {
+      setData(result.data)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
 
   const handleEdit = (id) => {
     // alert(id);
@@ -85,8 +97,8 @@ const DepCrud = () => {
               ? data.map((item, index) => {
                   return (
                     <tr key={index}>
-                      <td>{item.dep_id}</td>
-                      <td>{item.name}</td>
+                      <td>{item.id}</td>
+                      <td>{item.dep_name}</td>
                       <td colSpan={2}>
                         <button
                           className="btn btn-primary"
