@@ -75,7 +75,9 @@ const DepCrud = () => {
     axios.post(url, data).then((result) => {
       getData();
       clear();
-    });
+    }).catch((error) => {
+      console.log(error)
+    })
   };
 
   const clear = () => {
