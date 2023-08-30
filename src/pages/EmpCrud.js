@@ -155,7 +155,6 @@ const EmpCrud = () => {
       handleClose();
       getData();
       clear();
-      // toast.success('Émployee has been added');
     }).catch((error) => {
       console.log(error);
     })

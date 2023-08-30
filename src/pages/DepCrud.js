@@ -15,6 +15,7 @@ const DepCrud = () => {
   const [depname, setDepName] = useState("");
 
   const [editDepName, setEditDepName] = useState("");
+  const [editid, setEditid] = useState();
 
   const [lgShow, setLgShow] = useState(false);
   const handleClose = () => setLgShow(false);
@@ -54,8 +55,15 @@ const DepCrud = () => {
   };
 
   const handleEdit = (id) => {
-    // alert(id);
     handleShow();
+    axios.get(`https://localhost:7105/api/Department/${id}`)
+    .then((result) => {
+      setEditDepName(result.data.dep_name)
+      setEditid(id)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   };
 
   const handleDelete = (id) => {
@@ -74,7 +82,22 @@ const DepCrud = () => {
     }
   };
 
-  const handleUpdate = () => {};
+  const handleUpdate = () => {
+    const url = `https://localhost:7105/api/Department/${editid}`;
+    const data = {
+      id: editid,
+      dep_name: editDepName,
+    };
+    
+    axios.put(url, data)
+    .then((result) => {
+      handleClose();
+      getData();
+      clear();
+    }).catch((error) => {
+      console.log(error);
+    })
+  };
 
   const handleSave = () => {
     const url = "https://localhost:7105/api/Department";
@@ -131,7 +154,7 @@ const DepCrud = () => {
                       <td colSpan={2}>
                         <button
                           className="btn btn-primary"
-                          onClick={() => handleEdit(item.dep_id)}
+                          onClick={() => handleEdit(item.id)}
                         >
                           Edit
                         </button>{" "}
@@ -157,7 +180,7 @@ const DepCrud = () => {
           aria-labelledby="example-modal-sizes-title-lg"
         >
           <Modal.Header closeButton>
-            <Modal.Title>Update Employee Details</Modal.Title>
+            <Modal.Title>Update Department Details</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Row>
