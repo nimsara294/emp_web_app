@@ -43,14 +43,15 @@ const DepCrud = () => {
   }, []);
 
   const getData = () => {
-    axios.get('https://localhost:7105/api/Department')
-    .then((result) => {
-      setData(result.data)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }
+    axios
+      .get("https://localhost:7105/api/Department")
+      .then((result) => {
+        setData(result.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const handleEdit = (id) => {
     // alert(id);
@@ -64,6 +65,22 @@ const DepCrud = () => {
   };
 
   const handleUpdate = () => {};
+
+  const handleSave = () => {
+    const url = "https://localhost:7105/api/Department";
+    const data = {
+      dep_name: depname,
+    };
+
+    axios.post(url, data).then((result) => {
+      getData();
+      clear();
+    });
+  };
+
+  const clear = () => {
+    setDepName("");
+  };
 
   return (
     <div>
@@ -80,7 +97,7 @@ const DepCrud = () => {
               />
             </Col>
             <Col>
-              <button className="btn btn-primary">Add Department</button>
+              <button className="btn btn-primary" onClick={() => handleSave()}>Add Department</button>
             </Col>
           </Row>
         </Container>

@@ -9,20 +9,23 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
 import "bootstrap/dist/css/bootstrap.css";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import axios from "axios";
+
 
 const EmpCrud = () => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
-
+  
   const [editFname, setEditfname] = useState("");
   const [editLname, setEditlname] = useState("");
-
+  
   const [lgShow, setLgShow] = useState(false);
   const handleClose = () => setLgShow(false);
   const handleShow = () => setLgShow(true);
-
+  
   const empdata = [
     {
       emp_id: 1,
@@ -51,31 +54,31 @@ const EmpCrud = () => {
   ];
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [data, setData] = useState([]);
-
+  
   useEffect(() => {
     getData();
   }, []);
-
+  
   const [deps, setDeps] = useState([]);
-
+  
   useEffect(() => {
     getDepData();
   }, []);
-
+  
   const getData = () => {
     axios
-      .get("https://localhost:7105/api/Employee")
-      .then((result) => {
-        setData(result.data);
-        console.log(data);
-      })
+    .get("https://localhost:7105/api/Employee")
+    .then((result) => {
+      setData(result.data);
+      console.log(data);
+    })
       .catch((error) => {
         console.log(error);
       });
-  };
-
-  const getDepData = () => {
-    axios
+    };
+    
+    const getDepData = () => {
+      axios
       .get("https://localhost:7105/api/Department")
       .then((result) => {
         setDeps(result.data);
@@ -84,41 +87,41 @@ const EmpCrud = () => {
       .catch((error) => {
         console.log(error);
       });
-  };
-
-  const options = [
-    { value: "", text: "--Select Department--" },
-    { value: "IT", text: "IT" },
-    { value: "HR", text: "HR" },
-    { value: "Financial", text: "Financial" },
-  ];
-
-  const [dep, setDep] = useState(options[0].value);
-  const [editDep, setEditdep] = useState(options[0].value);
-
-  const handleChange = (event) => {
-    // console.log(event.target.value);
-    setDep(event.target.value);
-  };
-
+    };
+    
+    const options = [
+      { value: "", text: "--Select Department--" },
+      { value: "IT", text: "IT" },
+      { value: "HR", text: "HR" },
+      { value: "Financial", text: "Financial" },
+    ];
+    
+    const [dep, setDep] = useState(options[0].value);
+    const [editDep, setEditdep] = useState(options[0].value);
+    
+    const handleChange = (event) => {
+      // console.log(event.target.value);
+      setDep(event.target.value);
+    };
+    
   const handleEditChange = (event) => {
     // console.log(event.target.value);
     setEditdep(event.target.value);
   };
-
+  
   const handleEdit = (id) => {
     // alert(id);
     handleShow();
   };
-
+  
   const handleDelete = (id) => {
     if (window.confirm("Do you want to delete this employee?") === true) {
       alert(id);
     }
   };
-
+  
   const handleUpdate = () => {};
-
+  
   const handleSave = () => {
     const url = "https://localhost:7105/api/Employee";
     const data = {
@@ -126,15 +129,15 @@ const EmpCrud = () => {
       lname: lname,
       dep: dep,
     };
-
+    
     axios.post(url, data)
     .then((result) => {
       getData();
-      // clear();
-      // toast.success('Émployee has been added');
+      clear();
+      toast.success('Émployee has been added');
     })
   };
-
+  
   const clear = () => {
     setFname('');
     setLname('');
@@ -143,7 +146,7 @@ const EmpCrud = () => {
     setEditlname('');
     setEditdep('');
   }
-
+  
   return (
     <Fragment>
       <Container>
