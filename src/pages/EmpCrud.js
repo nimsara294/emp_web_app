@@ -55,11 +55,30 @@ const EmpCrud = () => {
   useEffect(() => {
     getData();
   }, []);
+  
+  const [deps, setDeps] = useState([])
 
+  useEffect(() => {
+    getDepData();
+  }, [deps]);
+  
   const getData = () => {
     axios.get('https://localhost:7105/api/Employee')
     .then((result) => {
       setData(result.data)
+      console.log(data)
+    }) 
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+  
+  
+  const getDepData = () => {
+    axios.get('https://localhost:7105/api/Department')
+    .then((result) => {
+      setDeps(result.data)
+      console.log(deps)
     })
     .catch((error) => {
       console.log(error)
@@ -127,9 +146,14 @@ const EmpCrud = () => {
               value={dep}
               onChange={handleChange}
             >
-              {options.map((option) => (
+              {/* {options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.text}
+                </option>
+              ))} */}
+              {deps.map((dep) => (
+                <option key={dep.id} value={dep.id}>
+                  {dep.dep_name}
                 </option>
               ))}
             </Form.Select>
@@ -181,6 +205,8 @@ const EmpCrud = () => {
         </tbody>
       </Table>
 
+
+
       <Modal
         size="lg"
         show={lgShow}
@@ -216,9 +242,14 @@ const EmpCrud = () => {
               value={editDep}
               onChange={handleEditChange}
             >
-              {options.map((option) => (
+              {/* {options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.text}
+                </option>
+              ))} */}
+              {deps.map((dep) => (
+                <option key={dep.id} value={dep.id}>
+                  {dep.dep_name}
                 </option>
               ))}
             </Form.Select>
