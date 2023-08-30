@@ -9,10 +9,13 @@ import Col from "react-bootstrap/Col";
 
 import "bootstrap/dist/css/bootstrap.css";
 
+import axios from "axios";
+
 const DepCrud = () => {
   const [depname, setDepName] = useState("");
 
   const [editDepName, setEditDepName] = useState("");
+  const [editid, setEditid] = useState();
 
   const [lgShow, setLgShow] = useState(false);
   const handleClose = () => setLgShow(false);
@@ -36,22 +39,83 @@ const DepCrud = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    setData(depData);
+    getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const getData = () => {
+    axios
+      .get("https://localhost:7105/api/Department")
+      .then((result) => {
+        setData(result.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const handleEdit = (id) => {
-    // alert(id);
     handleShow();
+    axios.get(`https://localhost:7105/api/Department/${id}`)
+    .then((result) => {
+      setEditDepName(result.data.dep_name)
+      setEditid(id)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   };
 
   const handleDelete = (id) => {
     if (window.confirm("Do you want to delete this department?") === true) {
-      alert(id);
+      axios.delete(`https://localhost:7105/api/Department/${id}`)
+      .then((result) => {
+        if(result.status === 200)
+        {
+          window.alert("Department deleted");
+          getData();
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
     }
   };
 
-  const handleUpdate = () => {};
+  const handleUpdate = () => {
+    const url = `https://localhost:7105/api/Department/${editid}`;
+    const data = {
+      id: editid,
+      dep_name: editDepName,
+    };
+    
+    axios.put(url, data)
+    .then((result) => {
+      handleClose();
+      getData();
+      clear();
+    }).catch((error) => {
+      console.log(error);
+    })
+  };
+
+  const handleSave = () => {
+    const url = "https://localhost:7105/api/Department";
+    const data = {
+      dep_name: depname,
+    };
+
+    axios.post(url, data).then((result) => {
+      getData();
+      clear();
+    }).catch((error) => {
+      console.log(error)
+    })
+  };
+
+  const clear = () => {
+    setDepName("");
+  };
 
   return (
     <div>
@@ -68,7 +132,7 @@ const DepCrud = () => {
               />
             </Col>
             <Col>
-              <button className="btn btn-primary">Add Department</button>
+              <button className="btn btn-primary" onClick={() => handleSave()}>Add Department</button>
             </Col>
           </Row>
         </Container>
@@ -85,19 +149,19 @@ const DepCrud = () => {
               ? data.map((item, index) => {
                   return (
                     <tr key={index}>
-                      <td>{item.dep_id}</td>
-                      <td>{item.name}</td>
+                      <td>{item.id}</td>
+                      <td>{item.dep_name}</td>
                       <td colSpan={2}>
                         <button
                           className="btn btn-primary"
-                          onClick={() => handleEdit(item.dep_id)}
+                          onClick={() => handleEdit(item.id)}
                         >
                           Edit
                         </button>{" "}
                         &nbsp;
                         <button
                           className="btn btn-danger"
-                          onClick={() => handleDelete(item.dep_id)}
+                          onClick={() => handleDelete(item.id)}
                         >
                           Delete
                         </button>
@@ -116,7 +180,7 @@ const DepCrud = () => {
           aria-labelledby="example-modal-sizes-title-lg"
         >
           <Modal.Header closeButton>
-            <Modal.Title>Update Employee Details</Modal.Title>
+            <Modal.Title>Update Department Details</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Row>
