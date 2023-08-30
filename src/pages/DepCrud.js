@@ -60,7 +60,17 @@ const DepCrud = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Do you want to delete this department?") === true) {
-      alert(id);
+      axios.delete(`https://localhost:7105/api/Department/${id}`)
+      .then((result) => {
+        if(result.status === 200)
+        {
+          window.alert("Department deleted");
+          getData();
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
     }
   };
 
@@ -128,7 +138,7 @@ const DepCrud = () => {
                         &nbsp;
                         <button
                           className="btn btn-danger"
-                          onClick={() => handleDelete(item.dep_id)}
+                          onClick={() => handleDelete(item.id)}
                         >
                           Delete
                         </button>
