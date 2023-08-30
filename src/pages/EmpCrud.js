@@ -18,11 +18,11 @@ const EmpCrud = () => {
 
   const [editFname, setEditfname] = useState("");
   const [editLname, setEditlname] = useState("");
-  
+
   const [lgShow, setLgShow] = useState(false);
   const handleClose = () => setLgShow(false);
   const handleShow = () => setLgShow(true);
-  
+
   const empdata = [
     {
       emp_id: 1,
@@ -51,50 +51,51 @@ const EmpCrud = () => {
   ];
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [data, setData] = useState([]);
-  
+
   useEffect(() => {
     getData();
   }, []);
-  
-  const [deps, setDeps] = useState([])
+
+  const [deps, setDeps] = useState([]);
 
   useEffect(() => {
     getDepData();
-  }, [deps]);
-  
+  }, []);
+
   const getData = () => {
-    axios.get('https://localhost:7105/api/Employee')
-    .then((result) => {
-      setData(result.data)
-      console.log(data)
-    }) 
-    .catch((error) => {
-      console.log(error)
-    })
-  }
-  
-  
+    axios
+      .get("https://localhost:7105/api/Employee")
+      .then((result) => {
+        setData(result.data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const getDepData = () => {
-    axios.get('https://localhost:7105/api/Department')
-    .then((result) => {
-      setDeps(result.data)
-      console.log(deps)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }
-  
+    axios
+      .get("https://localhost:7105/api/Department")
+      .then((result) => {
+        setDeps(result.data);
+        console.log(deps);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const options = [
     { value: "", text: "--Select Department--" },
     { value: "IT", text: "IT" },
     { value: "HR", text: "HR" },
     { value: "Financial", text: "Financial" },
   ];
-  
+
   const [dep, setDep] = useState(options[0].value);
   const [editDep, setEditdep] = useState(options[0].value);
-  
+
   const handleChange = (event) => {
     // console.log(event.target.value);
     setDep(event.target.value);
@@ -117,6 +118,31 @@ const EmpCrud = () => {
   };
 
   const handleUpdate = () => {};
+
+  const handleSave = () => {
+    const url = "https://localhost:7105/api/Employee";
+    const data = {
+      fname: fname,
+      lname: lname,
+      dep: dep,
+    };
+
+    axios.post(url, data)
+    .then((result) => {
+      getData();
+      // clear();
+      // toast.success('Émployee has been added');
+    })
+  };
+
+  const clear = () => {
+    setFname('');
+    setLname('');
+    setDep('');
+    setEditfname('');
+    setEditlname('');
+    setEditdep('');
+  }
 
   return (
     <Fragment>
@@ -152,14 +178,16 @@ const EmpCrud = () => {
                 </option>
               ))} */}
               {deps.map((dep) => (
-                <option key={dep.id} value={dep.id}>
+                <option key={dep.id} value={dep.dep_name}>
                   {dep.dep_name}
                 </option>
               ))}
             </Form.Select>
           </Col>
           <Col>
-            <button className="btn btn-primary">Add Employee</button>
+            <button className="btn btn-primary" onClick={() => handleSave()}>
+              Add Employee
+            </button>
           </Col>
         </Row>
       </Container>
@@ -205,8 +233,6 @@ const EmpCrud = () => {
         </tbody>
       </Table>
 
-
-
       <Modal
         size="lg"
         show={lgShow}
@@ -217,44 +243,44 @@ const EmpCrud = () => {
           <Modal.Title>Update Employee Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <Row>
-          <Col>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter First Name"
-              value={editFname}
-              onChange={(e) => setEditfname(e.target.value)}
-            />
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter Last Name"
-              value={editLname}
-              onChange={(e) => setEditlname(e.target.value)}
-            />
-          </Col>
-          <Col>
-            <Form.Select
-              aria-label="Default select example"
-              value={editDep}
-              onChange={handleEditChange}
-            >
-              {/* {options.map((option) => (
+          <Row>
+            <Col>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter First Name"
+                value={editFname}
+                onChange={(e) => setEditfname(e.target.value)}
+              />
+            </Col>
+            <Col>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter Last Name"
+                value={editLname}
+                onChange={(e) => setEditlname(e.target.value)}
+              />
+            </Col>
+            <Col>
+              <Form.Select
+                aria-label="Default select example"
+                value={editDep}
+                onChange={handleEditChange}
+              >
+                {/* {options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.text}
                 </option>
               ))} */}
-              {deps.map((dep) => (
-                <option key={dep.id} value={dep.id}>
-                  {dep.dep_name}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
-        </Row>
+                {deps.map((dep) => (
+                  <option key={dep.id} value={dep.id}>
+                    {dep.dep_name}
+                  </option>
+                ))}
+              </Form.Select>
+            </Col>
+          </Row>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
