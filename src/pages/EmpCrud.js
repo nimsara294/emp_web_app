@@ -21,6 +21,7 @@ const EmpCrud = () => {
   
   const [editFname, setEditfname] = useState("");
   const [editLname, setEditlname] = useState("");
+  const [editid, setEditid] = useState();
   
   const [lgShow, setLgShow] = useState(false);
   const handleClose = () => setLgShow(false);
@@ -110,9 +111,19 @@ const EmpCrud = () => {
   };
   
   const handleEdit = (id) => {
-    // alert(id);
     handleShow();
+    axios.get(`https://localhost:7105/api/Employee/${id}`)
+    .then((result) => {
+      setEditfname(result.data.fname)
+      setEditlname(result.data.lname)
+      setEditdep(result.data.dep)
+      setEditid(id)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   };
+  // console.log(editFname, editDep)
   
   const handleDelete = (id) => {
     if (window.confirm("Do you want to delete this employee?") === true) {
@@ -130,7 +141,25 @@ const EmpCrud = () => {
     }
   };
   
-  const handleUpdate = () => {};
+  const handleUpdate = () => {
+    const url = `https://localhost:7105/api/Employee/${editid}`;
+    const data = {
+      id: editid,
+      fname: editFname,
+      lname: editLname,
+      dep: editDep,
+    };
+    
+    axios.put(url, data)
+    .then((result) => {
+      handleClose();
+      getData();
+      clear();
+      // toast.success('Émployee has been added');
+    }).catch((error) => {
+      console.log(error);
+    })
+  };
   
   const handleSave = () => {
     const url = "https://localhost:7105/api/Employee";
@@ -229,7 +258,7 @@ const EmpCrud = () => {
                     <td colSpan={2}>
                       <button
                         className="btn btn-primary"
-                        onClick={() => handleEdit(item.emp_id)}
+                        onClick={() => handleEdit(item.id)}
                       >
                         Edit
                       </button>{" "}
@@ -289,7 +318,7 @@ const EmpCrud = () => {
                 </option>
               ))} */}
                 {deps.map((dep) => (
-                  <option key={dep.id} value={dep.id}>
+                  <option key={dep.id} value={dep.dep_name}>
                     {dep.dep_name}
                   </option>
                 ))}
